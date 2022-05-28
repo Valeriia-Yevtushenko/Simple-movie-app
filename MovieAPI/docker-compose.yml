@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:13-alpine
+    container_name: database
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    networks:
+      - local-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=movies
+  pgadmin4:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: always
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "v.y.yevtushenko@student.khai.edu"
+      PGADMIN_DEFAULT_PASSWORD: "valeriia"
+    networks:
+      - local-db
+
+networks:
+    local-db:
+        driver: bridge
+volumes:
+  postgres_data:
