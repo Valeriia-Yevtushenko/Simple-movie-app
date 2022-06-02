@@ -1,5 +1,4 @@
 const express = require('express')
-const { Director } = require('../database')
 const router = express.Router()
 const db = require('../database')
 
@@ -41,7 +40,16 @@ router.post("/", function(req, res) {
             const associations = req.body.genres.map((id) => ({"MovieId": movie.id, "GenreId": id}))
             db.MovieGenre.bulkCreate(associations)
             .then(movieGenre => {
-                res.status(200).send(JSON.stringify(movie))
+                db.Movie.findByPk(movie.id,
+                    {
+                        include: db.Genre
+                    })
+                    .then( movie => {
+                        res.status(200).send(JSON.stringify(movie));
+                    })
+                    .catch( error => {
+                        res.status(500).send(JSON.stringify(error));
+                    })
             }).catch( error => {
                 res.status(500).send(JSON.stringify(error))
             })
@@ -50,7 +58,7 @@ router.post("/", function(req, res) {
             res.status(500).send(JSON.stringify(error))
         })
 })
-
+   
 router.put("/:id", function(req, res) {
     db.Movie.update({
         name: req.body.name,
@@ -60,23 +68,37 @@ router.put("/:id", function(req, res) {
         DirectorId: req.body.directorid
     }, 
     {
-        where: {
-          id: req.params.id
-        }
+        where: {id: req.params.id}
     })
         .then( movie => {
-            const associations = req.body.genres.map((id) => ({"MovieId": movie.id, "GenreId": id}))
-            db.MovieGenre.bulkCreate(associations)
-            .then(movieGenre => {
-                res.status(200).send(JSON.stringify(movie))
-            }).catch( error => {
-                res.status(500).send(JSON.stringify(error))
+            db.MovieGenre.destroy({
+                where: {MovieId: req.params.id} 
             })
+                .then(() => {
+                    if (req.body.genres) {
+                        const associations = req.body.genres.map((id) => ({"MovieId": req.params.id, "GenreId": id}))
+                        db.MovieGenre.bulkCreate(associations)
+                        .then( movieGenres => {
+                            db.Movie.findByPk(req.params.id, {include: db.Genre})
+                            .then( movie => {
+                                res.status(200).send(JSON.stringify(movie));
+                            })
+                        })
+                    }
+                    db.Movie.findByPk(req.params.id, {include: db.Genre})
+                    .then( movie => {
+                        res.status(200).send(JSON.stringify(movie));
+                    })
+                    .catch(error => {
+                        res.status(500).send(JSON.stringify(error))
+                    })
+                })
+            })
+
+        .catch(error => {
+            res.status(500).send(JSON.stringify(error));
         })
-        .catch( error => {
-            res.status(500).send(JSON.stringify(error))
-        })
-})
+    })
 
 router.delete("/:id", function(req, res) {
     db.Movie.destroy({

@@ -23,7 +23,7 @@ router.put("/me", function(req, res) {
         }
     })
         .then( user => {
-            res.status(200).send();
+            res.status(200).send(JSON.stringify(user));
         })
         .catch( error => {
             res.status(500).send(JSON.stringify(error));
@@ -53,19 +53,34 @@ router.put("/movies", function(req, res) {
             res.status(500).send(JSON.stringify(error));
         })
 })
-
-router.delete("/:id", function(req, res) {
+router.put("/movies", function(req, res) {
     db.UserMovie.destroy({
-        where: {
-            id: req.params.id
-        }
+        where: {UserId: req.user.id} 
     })
-        .then(() => {
-            res.status(204).send();
-        })
-        .catch( error => {
+    .then(() => {
+            if (req.body.movies) {
+                const associations = req.body.movies.map((id) => ({"UserId": req.user.id, "MovieId": id}))
+                db.UserMovie.bulkCreate(associations)
+                .then(userMovie => {
+                    db.User.findByPk(req.user.id,
+                        {
+                            include: db.Movie
+                        })
+                        .then( movies => {
+                            res.status(200).send(JSON.stringify(movies));
+                        })
+                        .catch( error => {
+                            res.status(500).send(JSON.stringify(error));
+                        })
+                })
+                .catch(error => {
+                    res.status(500).send(JSON.stringify(error));
+                })
+            }
+    })
+    .catch(error => {
             res.status(500).send(JSON.stringify(error));
-        })
+    })
 })
 
 module.exports = router

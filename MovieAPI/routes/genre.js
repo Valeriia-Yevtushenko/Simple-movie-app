@@ -44,7 +44,7 @@ router.put("/:id", function(req, res) {
         }
     })
         .then( genre => {
-            res.status(200).send();
+            res.status(200).send(JSON.stringify(genre));
         })
         .catch( error => {
             res.status(500).send(JSON.stringify(error));

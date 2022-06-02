@@ -1,6 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken')
+const cors = require('cors')
 const app = express()
 const port = 3000
 const path = 'logger.txt'
@@ -52,6 +53,7 @@ app.use(function(request, response, next){
   next()
 })
 
+app.use(cors())
 app.use(express.json())
 app.use('/users', userRouter)
 app.use('/directors', directorRouter)

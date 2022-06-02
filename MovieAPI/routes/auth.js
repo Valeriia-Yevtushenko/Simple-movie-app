@@ -31,9 +31,11 @@ router.post("/signin", function(req, res) {
         
         .then( user => {
             const token = {'accesstoken': generateAccessToken({id: user.id})}
+            console.log(token)
             res.status(200).send(JSON.stringify(token))
         })
         .catch( error => {
+            console.log(error)
             res.status(500).send(JSON.stringify(error));
         })
 })
