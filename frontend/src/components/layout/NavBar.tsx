@@ -73,6 +73,8 @@ export const NavBar = () => {
     }
   }, [location.pathname, navValue]);
 
+  if (location.pathname === Endpoints.AUTH) return null;
+
   return (
     <AppBar position='fixed' color='primary' style={{ top: 'auto', bottom: 0 }}>
       <BottomNavigation
