@@ -1,0 +1,63 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": [
+    "react-app",
+    "react-app/jest",
+    "airbnb",
+    "airbnb-typescript",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "rules": {
+    "quotes": ["error"],
+    "@typescript-eslint/quotes": ["error"],
+    "@typescript-eslint/return-await": ["off"],
+    "react/jsx-uses-react": ["off"],
+    "react/react-in-jsx-scope": ["off"],
+    "react/jsx-props-no-spreading": ["off"],
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "assert": "either"
+      }
+    ],
+    "no-shadow": "off",
+    "import/prefer-default-export": "off",
+    "react/jsx-uses-vars": "error",
+    "react/jsx-closing-tag-location": "warn",
+    "react/no-unused-state": "warn",
+    "react/display-name": "off",
+    "react/jsx-no-target-blank": "warn",
+    "react/function-component-definition": "off",
+    "react/jsx-boolean-value": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "jsx-a11y/alt-text": "warn",
+    "array-callback-return": "warn",
+    "eqeqeq": "warn",
+    "no-sequences": "warn",
+    "no-useless-escape": "warn",
+    "no-duplicate-case": "warn",
+    "no-console": "warn",
+    "react/self-closing-comp": "warn",
+    "react/require-default-props": "off",
+    "no-param-reassign": "off",
+    "import/no-cycle": "off",
+    "no-debugger": "off",
+    "no-nested-ternary": "off"
+  }
+}
