@@ -14,6 +14,7 @@ const authRouter = require('./routes/auth')
 const { use } = require('./routes/movie')
 
 dotenv.config()
+app.use(cors())
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization']
@@ -53,7 +54,7 @@ app.use(function(request, response, next){
   next()
 })
 
-app.use(cors())
+
 app.use(express.json())
 app.use('/users', userRouter)
 app.use('/directors', directorRouter)
